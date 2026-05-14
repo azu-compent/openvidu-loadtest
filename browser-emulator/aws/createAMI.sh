@@ -2,13 +2,17 @@
 set -eu -o pipefail
 
 usage() {
-  echo "Usage: $0 [--region <AWS_DEFAULT_REGION>] [--version <CF_URL>]" >&2
-  echo "Defaults: --region us-east-1 --version $PWD/livekit/EC2-browser-emulator-no-qoe-firefox.yml" >&2
+  echo "Usage: $0 [--region <AWS_DEFAULT_REGION>] [--version <CF_URL>] [--image-id <AMI_ID>]" >&2
+  echo "Defaults: --region us-east-1 --version $PWD/livekit/EC2-browser-emulator-no-qoe-firefox.yml --image-id ami-09e67e426f25ce0d7" >&2
   exit 1
 }
 
 AWS_DEFAULT_REGION="us-east-1"
 CF_URL="$PWD/livekit/EC2-browser-emulator-no-qoe.yml"
+
+# Please, refer to https://cloud-images.ubuntu.com/locator/ec2/
+# to find a valid EC2 AMI (Ubuntu 20.04 LTS AMD64 ONLY!)
+IMAGE_ID="ami-09e67e426f25ce0d7"
 
 while [[ $# -gt 0 ]]; do
   key="$1"
@@ -19,6 +23,9 @@ while [[ $# -gt 0 ]]; do
     --version)
       CF_URL="$2"
       shift; shift;;
+    --image-id)
+      IMAGE_ID="$2"
+      shift; shift;;
     *)
       echo "Unknown argument: $key" >&2
       usage;;
@@ -28,10 +35,7 @@ done
 export AWS_DEFAULT_REGION
 echo "region set to $AWS_DEFAULT_REGION"
 echo "version set to $CF_URL"
-
-# Please, refer to https://cloud-images.ubuntu.com/locator/ec2/
-# to find a valid EC2 AMI
-IMAGE_ID=ami-09e67e426f25ce0d7
+echo "image id set to $IMAGE_ID"
 
 DATESTAMP=$(date +%s)
 TEMPJSON=$(mktemp -t cloudformation-XXX --suffix .json)

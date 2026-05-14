@@ -214,8 +214,17 @@ export class RealBrowserService {
 				try {
 					const comModuleInstance = BaseComModule.getInstance();
 					const webappUrl = comModuleInstance.generateWebappUrl(request);
-					console.log(webappUrl);
-					let driver: WebDriver; 
+					console.log('WebAppUrl: ' + webappUrl);
+					console.log('OpenViduUrl: ' + request.openviduUrl);
+					// The webapp is served over HTTPS. If the OpenVidu/LiveKit URL is plain
+					// HTTP, Chrome blocks the ws:// connection as mixed active content.
+					// Treat that origin as secure so the WebSocket upgrade is allowed.
+					if (request.openviduUrl?.startsWith('http://')) {
+						this.chromeOptions.addArguments(`--unsafely-treat-insecure-origin-as-secure=${request.openviduUrl}`);
+						this.chromeOptions.addArguments('--disable-web-security');
+						this.chromeOptions.addArguments('--allow-running-insecure-content');
+					}
+					let driver: WebDriver;
 					if (process.env.REAL_DRIVER === "firefox") {
 						driver = await this.seleniumService.getFirefoxDriver(this.firefoxCapabilities, this.firefoxOptions);
 					} else {

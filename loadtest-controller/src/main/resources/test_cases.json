@@ -2,13 +2,17 @@
 	"testcases": [
 		{
 			"typology": "N:N",
-			"participants": ["2"],
-			"sessions": "1",
+			"participants": ["5","10","15","20","25","30","35","40","45","50"],
+			"sessions": "infinite",
 			"startingParticipants": 0,
 			"resolution": "640x480",
 			"recording": false,
 			"headless": false,
 			"description": "This test case will add infinite sessions (until it reaches its limit) of publishers that the array of participants indicates"
+		},
+		{
+			"typology": "TERMINATE",
+			"desciption": "This terminate all EC2 instances launched for loadtest purposes"
 		}
 	]
 }

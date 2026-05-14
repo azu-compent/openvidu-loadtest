@@ -96,9 +96,10 @@ public class BrowserEmulatorClient {
 
 	public void ping(String workerUrl) {
 		try {
-			log.info("Pinging to {} ...", workerUrl);
+			String pingUrl = "https://" + workerUrl + ":" + WORKER_PORT + "/instance/ping";
+			log.info("Pinging to {} ...", pingUrl);
 			HttpResponse<String> response = this.httpClient
-					.sendGet("https://" + workerUrl + ":" + WORKER_PORT + "/instance/ping", getHeaders());
+					.sendGet(pingUrl, getHeaders());
 			if (response.statusCode() != HTTP_STATUS_OK) {
 				log.error("Error doing ping. Retry...");
 				sleeper.sleep(WAIT_S, null);

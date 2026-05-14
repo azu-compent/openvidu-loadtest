@@ -56,7 +56,14 @@ Take into account that you must to deploy OpenVidu platform before using this to
 
 	```bash
 	cd ./browser-emulator/aws/
-	./createAMI.sh --region eu-west-1 --version ./EC2-browser-emulator-firefox.yml
+	./createAMI.sh --region eu-west-1 --version ./EC2-browser-emulator-firefox.yml --image-id ami-0910be1e1d214d762
+	```
+
+	To find the correct image-id, refer to https://cloud-images.ubuntu.com/locator/ec2/ (Ubuntu 20.04 LTS AMD64 ONLY!)
+
+    azu@compent.net: I used this:
+	```bash
+	openvidu-loadtest/browser-emulator/aws$ ./createAMI.sh --region eu-north-1 --version PATHTOREPO/openvidu-loadtest/browser-emulator/aws/livekit/EC2-browser-emulator-no-qoe.yml --image-id ami-01637463b2cbe7cb6
 	```
 
 	The following versions are available:
@@ -64,6 +71,8 @@ Take into account that you must to deploy OpenVidu platform before using this to
 	- Chrome with qoe analysis software preinstalled: `./EC2-browser-emulator.yml`
 	- Firefox with no qoe analysis software preinstalled: `./EC2-browser-emulator-firefox-no-qoe.yml`
 	- Firefox with qoe analysis software preinstalled: `./EC2-browser-emulator-firefox.yml`
+
+    The process of creating an AMI takes some time, you may want to SSH into the created BrowserEmulator instance and `tail -f /var/log/prepare.log` to monitor if something failed.
 
 * **Create a security group**:
 
@@ -102,7 +111,7 @@ Then follow these steps:
 - **Clone this repository**
 
 ```bash
-git clone https://github.com/OpenVidu/openvidu-loadtest.git
+git clone https://github.com/azu-compent/openvidu-loadtest.git
 cd openvidu-loadtest/browser-emulator
 ```
 - **Install and run**
@@ -145,7 +154,7 @@ Then follow these steps:
 #### 1. Clone this repository
 
 ```bash
-git clone https://github.com/OpenVidu/openvidu-loadtest.git
+git clone https://github.com/azu-compent/openvidu-loadtest.git
 ```
 
 #### 2. Configure Loadtest Controller
@@ -417,6 +426,10 @@ For start with it, run the following command:
 cd loadtest-controller
 mvn spring-boot:run
 ```
+
+Logs for worker machines can be found in `/var/log/crontab.log` when you ssh into them. A worker is stopped automatically after test runs, though, so you may want to comment out calls to `ec2Client.stopInstance` in loadtest-controller.
+
+For test summary, see your configured s3 bucket.
 
 # Browser Emulator development
 

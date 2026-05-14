@@ -33,7 +33,7 @@ Resources:
           #!/bin/bash
           apt update
           apt install -y linux-aws-edge 
-          git clone https://github.com/OpenVidu/openvidu-loadtest.git /opt/openvidu-loadtest
+          git clone https://github.com/azu-compent/openvidu-loadtest.git /opt/openvidu-loadtest
 
           echo 'AWS_STACK=${AWS::StackId}' | sudo tee -a /etc/environment
           echo 'AWS_REGION=${AWS::Region}' | sudo tee -a /etc/environment
